@@ -95,7 +95,7 @@ void readData2(int argc, char ** argv, int ins)
 	//strcat_s(file_name, "data/fl1400.txt");
 
 	string trash_char;
-	if (argc == 4)
+	if (AllInstances == false)
 	{
 		strcat_s(file_name, "data/");
 		strcat_s(file_name, argv[1]);
