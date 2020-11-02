@@ -3,38 +3,28 @@
 
 void readData(int argc, char ** argv, int ins)
 {	
-	//string trash_char;
-	if (argc == 4)
+	// When instances is given by the user in command line.
+	if (AllInstances==false)
 	{
 		strcat_s(file_name, "data/");
 		strcat_s(file_name, argv[1]);
 		printf("The file is:%s\n", file_name);
 	}
 
-	if (argc == 2)
+	//When using instances on global.h
+	if (AllInstances)
 	{
 		file_name[0] = '\0';
 
 		char file_trash[50];
 		strcpy(file_trash, file[ins].c_str());
 
-		//cout << "file_name: " << file_name << endl;
-		//cout << "file_trash: " << file_trash << endl;
-
 		strcat_s(file_name, "data/");
 		strcat_s(file_name, file_trash);
 		printf("The file is:%s\n", file_name);
 
-		//cout << "file_name: " << file_name << endl;
-
 	}
 
-	//We need to indicate the file to start.
-	//Define the name/location of the file acording to the input parameter.
-	//strcat_s(file_name, "data/");
-	//strcat(file_name, argv[1]);
-	//printf("The file is:%s\n", file_name);
-	//strcat(instance, argv[1]);
 
 	//Create an input file stream
 	ifstream in(file_name, ios::in);
@@ -43,8 +33,8 @@ void readData(int argc, char ** argv, int ins)
 	n = number;// size of the problem, number of costumers
 	in >> number;
 	p = number; // facilite to locate using the value in the file
-	//const int p = atoi(argv[3]);// facilite to locate using the value in the input parameters
-
+	
+	if (argc > 2 ) p = atoi(argv[3]);// facilite to locate using the value in the input parameters
 
 	printf("The value of n: %d\n", n);
 	printf("The value of p: %d\n", p);
@@ -96,6 +86,8 @@ void readData(int argc, char ** argv, int ins)
 	
 }
 
+
+//for tsp intances
 void readData2(int argc, char ** argv, int ins)
 {
 	//We need to indicate the file to start.

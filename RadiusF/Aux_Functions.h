@@ -11,33 +11,38 @@ bool Read_Parameters(int argc, char *argv[])
 	int data_format = 0;
 	int p = 0;
 	if (argc < 2) return false;
+	
 
 	char *file_name;
 	file_name = argv[1];
-	
-	if (strlen(file_name) >= 5)
+
+	char *str2 = "all";
+	if (strcmp(file_name, str2) == 0)
+	{
+		cout << "Doing all instances." << endl;
+		AllInstances = true;
+	}
+	else
+	{
+		cout << "Instance " << file_name << endl;
+		AllInstances = false;
+	}
+	cin.get();
+
+	//Check file extension
+	if (strlen(file_name) >= 4)
 	{
 		printf("The file is:%s\n", file_name);
-		if (strcmp(&file_name[strlen(file_name) - 4], ".tsp") == 0)
-			data_format = 1;
-		else if (strcmp(&file_name[strlen(file_name) - 7], ".dimacs") == 0)
-		{
-			data_format = 2;
-		}
-		else if (strcmp(&file_name[strlen(file_name) - 4], ".dat") == 0)
+		if (strcmp(&file_name[strlen(file_name) - 4], ".dat") == 0)
 		{
 			data_format = 3;
 		}
 		else
 		{
 			printf("ERROR: data extension not recognized.\n");
-			printf("Valid extensions: .tsp, .dimacs\n");
+			printf("Valid extensions: .dat\n");
 			return false;
 		}
-	}
-	else if (file_name = "all")
-	{
-		cout << "Doing all instances." << endl;
 	}
 
 	int arg = 2;
@@ -62,11 +67,6 @@ bool Read_Parameters(int argc, char *argv[])
 		return false;
 	}
 
-	//if (no_p)
-	//{
-	//	printf("ERROR: No value for p has been given.\n");
-	//	return false;
-	//}
 	return true;
 }
 
