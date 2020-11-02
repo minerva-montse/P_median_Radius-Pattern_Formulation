@@ -27,7 +27,6 @@ bool Read_Parameters(int argc, char *argv[])
 		cout << "Instance " << file_name << endl;
 		AllInstances = false;
 	}
-	cin.get();
 
 	//Check file extension
 	if (strlen(file_name) >= 4)
