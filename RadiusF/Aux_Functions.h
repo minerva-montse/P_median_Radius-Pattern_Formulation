@@ -36,10 +36,14 @@ bool Read_Parameters(int argc, char *argv[])
 		{
 			data_format = 3;
 		}
+		else if (strcmp(&file_name[strlen(file_name) - 4], ".tsp") == 0)
+		{
+			data_format = 1;
+		}
 		else
 		{
 			printf("ERROR: data extension not recognized.\n");
-			printf("Valid extensions: .dat\n");
+			printf("Valid extensions: .dat .tsp\n");
 			return false;
 		}
 	}
