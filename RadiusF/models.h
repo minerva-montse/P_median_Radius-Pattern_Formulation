@@ -9,7 +9,6 @@ void RF()
 	IloModel model(env);
 	IloCplex cplex(model);
 
-
 	try
 	{
 		cout << "initial" << endl;
@@ -17,14 +16,11 @@ void RF()
 		//Location Variable.
 		IloBoolVarArray y(env, n); // 1-dimension array
 		IloNumVarArray2 z(env, n); // 1-dimension array 
-		//IloNumVarArray y(env, n); // 1-dimension array
 
 		//Give the names to the variables.
 		for (int i = 0; i < n; i++)
 		{
 			y[i] = IloBoolVar(env, Get_y_Name(i));
-			//y[i] = IloNumVar(env, 0, 1, ILOFLOAT, Get_y_Name(i));
-
 			z[i] = IloNumVarArray(env, Gi[i] - 1); //Becuse index k on z[i][k] stats at 2.
 
 			for (int k = 0; k < (Gi[i] - 1); k++)
@@ -33,7 +29,6 @@ void RF()
 		
 		//(2) Objective Function
 		IloExpr obj(env);
-		
 		for (size_t i = 0; i < n; i++)
 		{
 			for (size_t k = 1; k < Gi[i]; k++) //the sum starts at t=2, but we have index 0.
@@ -41,18 +36,16 @@ void RF()
 				obj += (D[i][k] - D[i][k - 1])*z[i][k - 1];
 			}
 		}
-
 		model.add(IloMinimize(env, obj));
-		cout << "OF added" << endl;
+
 		//(3) Constraints
 		//(3.1) Locate P clusters
 		IloExpr cons1(env);
 		for (size_t i = 0; i < n; i++)
 			cons1 += y[i];
-
 		model.add(cons1 == p);
 		cons1.clear();
-		cout << "sum y=p added" << endl;
+
 		//(3.2) Radius Constraint
 		IloExpr cons2(env);
 		for (size_t i = 0; i < n; i++)
@@ -67,14 +60,14 @@ void RF()
 				cons2.clear();
 			}
 		}
-		cout << "Radius constraint added" << endl;
+
 
 		//(4) Solve model.
 		cplex.setParam(IloCplex::ClockType, 1); // CPU time
 		cplex.setParam(IloCplex::TiLim, 7200); // Time limit
 		cplex.setParam(IloCplex::Threads, 1); // Number of threads
+		//cplex.exportModel("model_RF.lp"); //Export model to an LP file
 
-		//cplex.exportModel("model_RF.lp");
 		if (!cplex.solve()) {
 			env.error() << "Failed to optimize LP." << endl;
 			throw(-1);
@@ -83,10 +76,8 @@ void RF()
 		//(5) Solution.
 		optimal_value = cplex.getObjValue();
 		cout << "Optimal= " << optimal_value << endl;
-
 		sol_time = cplex.getTime();
 		cout << "Time= " << sol_time << endl;
-
 		BBnodes = cplex.getNnodes();
 		status = cplex.getCplexStatus();
 
@@ -115,35 +106,26 @@ void Patterns()
 
 	try
 	{
-
 		//(1) Variables
 		//Location Variable.
 		IloBoolVarArray y(env, n); // 1-dimension array
-		//IloNumVarArray y(env, n); // 1-dimension array 
-		//IloBoolVarArray2 s(env, n); // 2-dimension array
 		IloNumVarArray2 s(env, n); // 2-dimension array 
-
 
 		//Give the names to the variables.
 		for (int i = 0; i < n; i++)
 		{
 			y[i] = IloBoolVar(env, Get_y_Name(i));
-			//y[i] = IloNumVar(env, 0, 1, ILOFLOAT, Get_y_Name(i));
 
 			s[i] = IloNumVarArray(env, Gi[i]); //Becuse index k on z[i][k] stats at 2.
-			//s[i] = IloBoolVarArray(env, Gi[i]); //Becuse index k on z[i][k] stats at 2.
 
 			for (int k = 0; k < Gi[i]; k++)
 			{
 				s[i][k] = IloNumVar(env, 0, IloInfinity, ILOFLOAT, Get_s_Name(i, k));
-				//s[i][k] = IloBoolVar(env, Get_s_Name(i, k));
 			}
-				
 		}
 
 		//(2) Objective Function
 		IloExpr obj(env);
-		
 		for (size_t i = 0; i < n; i++)
 		{
 			for (size_t k = 0; k < Gi[i]; k++) //the sum starts at t=2, but we have index 0.
@@ -151,7 +133,6 @@ void Patterns()
 				obj += D[i][k]*s[i][k];
 			}
 		}
-
 		model.add(IloMinimize(env, obj));
 
 		//(3) Constraints
@@ -194,8 +175,8 @@ void Patterns()
 		cplex.setParam(IloCplex::ClockType, 1); // CPU time
 		cplex.setParam(IloCplex::TiLim, 7200); // Time limit
 		cplex.setParam(IloCplex::Threads, 1); // Number of threads
-
-		//cplex.exportModel("model_patterns.lp");
+		//cplex.exportModel("model_patterns.lp");  //Export model to an LP file
+		
 		if (!cplex.solve()) {
 			env.error() << "Failed to optimize LP." << endl;
 			throw(-1);
@@ -204,10 +185,8 @@ void Patterns()
 		//(5) Solution.
 		optimal_value = cplex.getObjValue();
 		cout << "Optimal= " << optimal_value << endl;
-
 		sol_time = cplex.getTime();
 		cout << "Time= " << sol_time << endl;
-
 		BBnodes = cplex.getNnodes();
 		status = cplex.getCplexStatus();
 
